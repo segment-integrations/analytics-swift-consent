@@ -1,0 +1,51 @@
+name: Swift
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  cancel_previous:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+    - uses: styfle/cancel-workflow-action@0.9.1
+      with:
+        workflow_id: ${{ github.event.workflow.id }}
+        
+  build_and_test_spm_mac:
+    needs: cancel_previous
+    runs-on: macos-latest
+    steps:
+    - uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: latest-stable
+    - uses: actions/checkout@v2
+    - name: Build
+      run: swift build
+    - name: Run tests
+      run: swift test
+
+  build_and_test_ios:
+    needs: cancel_previous
+    runs-on: macos-latest
+    steps:
+    - uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: latest-stable
+    - uses: actions/checkout@v2
+    - run: xcodebuild -scheme SegmentConsent test -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 13'
+
+  build_and_test_tvos:
+    needs: cancel_previous
+    runs-on: macos-latest
+    steps:
+    - uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: latest-stable
+    - uses: actions/checkout@v2
+    - run: xcodebuild -scheme SegmentConsent test -sdk appletvsimulator -destination 'platform=tvOS Simulator,name=Apple TV'
+ 
+      
