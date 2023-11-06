@@ -73,7 +73,7 @@ final class UnmappedDestinationsTests: XCTestCase {
         
         RunLoop.main.run(until: Date.distantPast)
         
-        XCTAssertTrue(segmentOutput.lastEvent != nil)
+        XCTAssertTrue(segmentOutput.lastEvent == nil)
         XCTAssertTrue(output1.lastEvent == nil)
         XCTAssertTrue(output2.lastEvent == nil)
         XCTAssertTrue(output3.lastEvent == nil)

@@ -128,7 +128,7 @@ extension ConsentManager {
         return newEvent
     }
     
-    internal func hasUnmappedDestinations(_ settings: Settings) -> Bool {
+    /*internal func hasUnmappedDestinations(_ settings: Settings) -> Bool {
         var result = false
         if let integrations = settings.integrations?.dictionaryValue {
             result = !integrations.allSatisfy { (key: String, value: Any) in
@@ -144,6 +144,12 @@ extension ConsentManager {
             }
         }
         return result
+    }*/
+    internal func hasUnmappedDestinations(_ settings: Settings) -> Bool {
+        if let hasUnmapped = settings.consentSettings?["hasUnmappedDestinations"]?.boolValue {
+            return hasUnmapped
+        }
+        return true
     }
     
     internal func enabledAtSegment(_ settings: Settings) -> Bool {
