@@ -8,7 +8,7 @@
 import Foundation
 
 internal struct Constants {
-    static let eventSegmentConsentPreference = "Segment Consent Preference"
+    static let eventSegmentConsentPreference = "Segment Consent Preference Updated"
     static let consentSettingsKey = "consentSettings"
     static let consentKey = "consent"
     static let categoryPreferenceKey = "categoryPreferences"
