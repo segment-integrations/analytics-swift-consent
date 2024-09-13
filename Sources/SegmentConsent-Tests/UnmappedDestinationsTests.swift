@@ -20,10 +20,10 @@ final class UnmappedDestinationsTests: XCTestCase {
     }
     
     func testNoToAll() {
-        removeUserDefaults(forWriteKey: "test")
+        removeUserDefaults(forWriteKey: "ud.testNoToAll")
         
         let settings = Settings.load(resource: "UnmappedDestinations.json", bundle: Bundle.module)
-        let analytics = Analytics(configuration: Configuration(writeKey: "test")
+        let analytics = Analytics(configuration: Configuration(writeKey: "ud.testNoToAll")
             .trackApplicationLifecycleEvents(false)
             .defaultSettings(settings)
         )
@@ -82,10 +82,10 @@ final class UnmappedDestinationsTests: XCTestCase {
     }
     
     func testYesTo1() {
-        removeUserDefaults(forWriteKey: "test")
+        removeUserDefaults(forWriteKey: "ud.testYesTo1")
         
         let settings = Settings.load(resource: "UnmappedDestinations.json", bundle: Bundle.module)
-        let analytics = Analytics(configuration: Configuration(writeKey: "test")
+        let analytics = Analytics(configuration: Configuration(writeKey: "ud.testYesTo1")
             .trackApplicationLifecycleEvents(false)
             .defaultSettings(settings)
         )
@@ -144,10 +144,10 @@ final class UnmappedDestinationsTests: XCTestCase {
     }
 
     func testYesTo2() {
-        removeUserDefaults(forWriteKey: "test")
+        removeUserDefaults(forWriteKey: "ud.testYesTo2")
         
         let settings = Settings.load(resource: "UnmappedDestinations.json", bundle: Bundle.module)
-        let analytics = Analytics(configuration: Configuration(writeKey: "test")
+        let analytics = Analytics(configuration: Configuration(writeKey: "ud.testYesTo2")
             .trackApplicationLifecycleEvents(false)
             .defaultSettings(settings)
         )
@@ -206,10 +206,10 @@ final class UnmappedDestinationsTests: XCTestCase {
     }
 
     func testYesTo3() {
-        removeUserDefaults(forWriteKey: "test")
+        removeUserDefaults(forWriteKey: "ud.testYesTo3")
         
         let settings = Settings.load(resource: "UnmappedDestinations.json", bundle: Bundle.module)
-        let analytics = Analytics(configuration: Configuration(writeKey: "test")
+        let analytics = Analytics(configuration: Configuration(writeKey: "ud.testYesTo3")
             .trackApplicationLifecycleEvents(false)
             .defaultSettings(settings)
         )
@@ -268,10 +268,10 @@ final class UnmappedDestinationsTests: XCTestCase {
     }
 
     func testYesTo4() {
-        removeUserDefaults(forWriteKey: "test")
+        removeUserDefaults(forWriteKey: "ud.testYesTo4")
         
         let settings = Settings.load(resource: "UnmappedDestinations.json", bundle: Bundle.module)
-        let analytics = Analytics(configuration: Configuration(writeKey: "test")
+        let analytics = Analytics(configuration: Configuration(writeKey: "ud.testYesTo4")
             .trackApplicationLifecycleEvents(false)
             .defaultSettings(settings)
         )
@@ -330,10 +330,10 @@ final class UnmappedDestinationsTests: XCTestCase {
     }
 
     func testYesTo1and2() {
-        removeUserDefaults(forWriteKey: "test")
+        removeUserDefaults(forWriteKey: "ud.testYesTo1and2")
         
         let settings = Settings.load(resource: "UnmappedDestinations.json", bundle: Bundle.module)
-        let analytics = Analytics(configuration: Configuration(writeKey: "test")
+        let analytics = Analytics(configuration: Configuration(writeKey: "ud.testYesTo1and2")
             .trackApplicationLifecycleEvents(false)
             .defaultSettings(settings)
         )
@@ -392,10 +392,10 @@ final class UnmappedDestinationsTests: XCTestCase {
     }
 
     func testYesToAll() {
-        removeUserDefaults(forWriteKey: "test")
+        removeUserDefaults(forWriteKey: "ud.testYesToAll")
         
         let settings = Settings.load(resource: "UnmappedDestinations.json", bundle: Bundle.module)
-        let analytics = Analytics(configuration: Configuration(writeKey: "test")
+        let analytics = Analytics(configuration: Configuration(writeKey: "ud.testYesToAll")
             .trackApplicationLifecycleEvents(false)
             .defaultSettings(settings)
         )

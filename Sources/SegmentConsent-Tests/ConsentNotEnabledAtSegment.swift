@@ -20,10 +20,10 @@ final class ConsentNotEnabledAtSegment: XCTestCase {
     }
 
     func testNoToAll() {
-        removeUserDefaults(forWriteKey: "test")
+        removeUserDefaults(forWriteKey: "testNoToAll")
         
         let settings = Settings.load(resource: "ConsentNotEnabledAtSegment.json", bundle: Bundle.module)
-        let analytics = Analytics(configuration: Configuration(writeKey: "test")
+        let analytics = Analytics(configuration: Configuration(writeKey: "testNoToAll")
             .trackApplicationLifecycleEvents(false)
             .defaultSettings(settings)
         )
@@ -82,10 +82,10 @@ final class ConsentNotEnabledAtSegment: XCTestCase {
     }
 
     func testYesToSome() {
-        removeUserDefaults(forWriteKey: "test")
+        removeUserDefaults(forWriteKey: "testYesToSome")
         
         let settings = Settings.load(resource: "ConsentNotEnabledAtSegment.json", bundle: Bundle.module)
-        let analytics = Analytics(configuration: Configuration(writeKey: "test")
+        let analytics = Analytics(configuration: Configuration(writeKey: "testYesToSome")
             .trackApplicationLifecycleEvents(false)
             .defaultSettings(settings)
         )
@@ -144,10 +144,10 @@ final class ConsentNotEnabledAtSegment: XCTestCase {
     }
 
     func testYesToAll() {
-        removeUserDefaults(forWriteKey: "test")
+        removeUserDefaults(forWriteKey: "testYesToAll")
         
         let settings = Settings.load(resource: "ConsentNotEnabledAtSegment.json", bundle: Bundle.module)
-        let analytics = Analytics(configuration: Configuration(writeKey: "test")
+        let analytics = Analytics(configuration: Configuration(writeKey: "testYesToAll")
             .trackApplicationLifecycleEvents(false)
             .defaultSettings(settings)
         )

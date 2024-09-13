@@ -20,10 +20,10 @@ final class NoUnmappedDestinationsTests: XCTestCase {
     }
     
     func testNoToAll() {
-        removeUserDefaults(forWriteKey: "test")
+        removeUserDefaults(forWriteKey: "nud.testNoToAll")
         
         let settings = Settings.load(resource: "NoUnmappedDestinations.json", bundle: Bundle.module)
-        let analytics = Analytics(configuration: Configuration(writeKey: "test")
+        let analytics = Analytics(configuration: Configuration(writeKey: "nud.testNoToAll")
             .trackApplicationLifecycleEvents(false)
             .defaultSettings(settings)
         )

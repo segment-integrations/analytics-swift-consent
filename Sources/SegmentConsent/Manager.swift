@@ -81,7 +81,7 @@ extension ConsentManager {
     }
     
     public func start() {
-        started = true
+        _started.set(true)
         // replay events.  they'll be sent back through the system and get stamped above.
         for event in queuedEvents {
             analytics?.process(event: event)

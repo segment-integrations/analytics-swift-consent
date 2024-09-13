@@ -36,7 +36,7 @@ jobs:
       with:
         xcode-version: latest-stable
     - uses: actions/checkout@v2
-    - run: xcodebuild -scheme SegmentConsent test -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 13'
+    - run: xcodebuild -scheme SegmentConsent test -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 15'
 
   build_and_test_tvos:
     needs: cancel_previous

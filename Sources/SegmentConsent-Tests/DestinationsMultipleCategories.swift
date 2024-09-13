@@ -20,10 +20,10 @@ final class DestinationsMultipleCategoriesTests: XCTestCase {
     }
     
     func testNoToAll() {
-        removeUserDefaults(forWriteKey: "test")
+        removeUserDefaults(forWriteKey: "dmc.testNoToAll")
         
         let settings = Settings.load(resource: "DestinationsMultipleCategories.json", bundle: Bundle.module)
-        let analytics = Analytics(configuration: Configuration(writeKey: "test")
+        let analytics = Analytics(configuration: Configuration(writeKey: "dmc.testNoToAll")
             .trackApplicationLifecycleEvents(false)
             .defaultSettings(settings)
         )
@@ -67,10 +67,10 @@ final class DestinationsMultipleCategoriesTests: XCTestCase {
     }
     
     func testYesTo1() {
-        removeUserDefaults(forWriteKey: "test")
+        removeUserDefaults(forWriteKey: "dmc.testYesTo1")
         
         let settings = Settings.load(resource: "DestinationsMultipleCategories.json", bundle: Bundle.module)
-        let analytics = Analytics(configuration: Configuration(writeKey: "test")
+        let analytics = Analytics(configuration: Configuration(writeKey: "dmc.testYesTo1")
             .trackApplicationLifecycleEvents(false)
             .defaultSettings(settings)
         )
@@ -114,10 +114,10 @@ final class DestinationsMultipleCategoriesTests: XCTestCase {
     }
 
     func testYesTo2() {
-        removeUserDefaults(forWriteKey: "test")
+        removeUserDefaults(forWriteKey: "dmc.testYesTo2")
         
         let settings = Settings.load(resource: "DestinationsMultipleCategories.json", bundle: Bundle.module)
-        let analytics = Analytics(configuration: Configuration(writeKey: "test")
+        let analytics = Analytics(configuration: Configuration(writeKey: "dmc.testYesTo2")
             .trackApplicationLifecycleEvents(false)
             .defaultSettings(settings)
         )
@@ -161,10 +161,10 @@ final class DestinationsMultipleCategoriesTests: XCTestCase {
     }
     
     func testYesToAll() {
-        removeUserDefaults(forWriteKey: "test")
+        removeUserDefaults(forWriteKey: "dmc.testYesToAll")
         
         let settings = Settings.load(resource: "DestinationsMultipleCategories.json", bundle: Bundle.module)
-        let analytics = Analytics(configuration: Configuration(writeKey: "test")
+        let analytics = Analytics(configuration: Configuration(writeKey: "dmc.testYesToAll")
             .trackApplicationLifecycleEvents(false)
             .defaultSettings(settings)
         )

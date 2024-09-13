@@ -17,7 +17,7 @@ final class ConsentBlockerTests: XCTestCase {
     }
     
     func testBlockWhenPartialConsentAvailable() {
-        let analytics = Analytics(configuration: Configuration(writeKey: "test").trackApplicationLifecycleEvents(false))
+        let analytics = Analytics(configuration: Configuration(writeKey: "cbt.testBlockWhenPartialConsentAvailable").trackApplicationLifecycleEvents(false))
         
         // Artificially give segment.io destination some consent settings
         let segmentSettings = [
@@ -51,7 +51,7 @@ final class ConsentBlockerTests: XCTestCase {
     }
     
     func testBlockBecauseNoConsentSettings() {
-        let analytics = Analytics(configuration: Configuration(writeKey: "test").trackApplicationLifecycleEvents(false))
+        let analytics = Analytics(configuration: Configuration(writeKey: "cbt.testBlockBecauseNoConsentSettings").trackApplicationLifecycleEvents(false))
         let output = OutputReaderPlugin()
         let consentManager = ConsentManager(provider: NoConsentProvider())
         
@@ -72,7 +72,7 @@ final class ConsentBlockerTests: XCTestCase {
     }
     
     func testBlockBecauseNoStamp() {
-        let analytics = Analytics(configuration: Configuration(writeKey: "test").trackApplicationLifecycleEvents(false))
+        let analytics = Analytics(configuration: Configuration(writeKey: "cbt.testBlockBecauseNoStamp").trackApplicationLifecycleEvents(false))
         let output = OutputReaderPlugin()
         let consentManager = ConsentManager(provider: AllConsentProvider())
         
@@ -106,7 +106,7 @@ final class ConsentBlockerTests: XCTestCase {
     }
     
     func testBlockBecauseNoConsent() {
-        let analytics = Analytics(configuration: Configuration(writeKey: "test").trackApplicationLifecycleEvents(false))
+        let analytics = Analytics(configuration: Configuration(writeKey: "cbt.testBlockBecauseNoConsent").trackApplicationLifecycleEvents(false))
         let output = OutputReaderPlugin()
         let consentManager = ConsentManager(provider: NoConsentProvider())
         
