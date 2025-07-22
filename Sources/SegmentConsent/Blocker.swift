@@ -14,7 +14,7 @@ public class ConsentBlocker: EventPlugin {
     internal let store: Store
     
     public var type: PluginType = .before
-    public var analytics: Segment.Analytics?
+    public weak var analytics: Segment.Analytics?
     
     public init(destinationKey: String, store: Store) {
         self.destinationKey = destinationKey
