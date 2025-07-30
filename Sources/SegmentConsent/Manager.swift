@@ -11,7 +11,7 @@ import Sovran
 
 public class ConsentManager: EventPlugin {
     public let type: PluginType = .before
-    public var analytics: Analytics? = nil
+    public weak var analytics: Analytics? = nil
     public let store = Store()
     
     internal var provider: ConsentCategoryProvider
@@ -23,7 +23,10 @@ public class ConsentManager: EventPlugin {
         self.provider = provider
         self.consentChange = consentChanged
         
-        self.provider.setChangeCallback(notifyConsentChanged)
+        // call notifyConsentChanged from a closure to avoid retain cycles.
+        self.provider.setChangeCallback( { [weak self] in
+            self?.notifyConsentChanged()
+        })
     }
     
     public func configure(analytics: Analytics) {
