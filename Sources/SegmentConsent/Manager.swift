@@ -13,11 +13,15 @@ public class ConsentManager: EventPlugin {
     public let type: PluginType = .before
     public weak var analytics: Analytics? = nil
     public let store = Store()
-    
+
     internal var provider: ConsentCategoryProvider
     internal var queuedEvents = [RawEvent]()
     internal let consentChange: (() -> Void)?
     @Atomic internal var started: Bool = false
+
+    // Serializes destination-timeline mutations triggered by settings updates.
+    // Prevents a race against Mediator iteration on the analytics event thread.
+    private let updateQueue = DispatchQueue(label: "com.segment.consent.manager.update")
         
     public init(provider: ConsentCategoryProvider, consentChanged: (() -> Void)? = nil) {
         self.provider = provider
@@ -39,26 +43,38 @@ public class ConsentManager: EventPlugin {
         store.dispatch(action: ConsentState.UpdateDestinationCategoriesAction(destinationCategories: state))
         store.dispatch(action: ConsentState.UpdateUnmappedDestinationsAction(hasUnmappedDestinations: hasUnmappedDestinations(settings)))
         store.dispatch(action: ConsentState.UpdateEnabledAtSegmentAction(enabledAtSegment: enabledAtSegment(settings)))
-        
-        if let analytics {
-            // Add customer blocker to segment.io
+
+        // update() is invoked from the URLSession delegate thread after settings
+        // are fetched. Destination timeline mutation (add(plugin:)) must not race
+        // with event processing on the analytics thread, and must be serialized
+        // against re-entrant settings updates to avoid duplicate blockers from
+        // a check-then-insert TOCTOU.
+        updateQueue.async { [weak self] in
+            guard let self, let analytics = self.analytics else { return }
+
             if let destination = analytics.find(key: Constants.segmentIOKey) {
-                let existingBlocker = destination.analytics?.find(pluginType: SegmentConsentBlocker.self)
-                if existingBlocker == nil {
-                    _ = destination.add(plugin: SegmentConsentBlocker(store: store))
+                self.installBlockerIfNeeded(on: destination, type: SegmentConsentBlocker.self) {
+                    SegmentConsentBlocker(store: self.store)
                 }
             }
-            
-            // Add blocker to other destinations
-            let destinationKeys = state.keys
-            for key in destinationKeys {
+
+            for key in state.keys {
                 if let destination = analytics.find(key: key) {
-                    let existingBlocker = destination.analytics?.find(pluginType: ConsentBlocker.self)
-                    if existingBlocker == nil {
-                        _ = destination.add(plugin: ConsentBlocker(destinationKey: key, store: store))
+                    self.installBlockerIfNeeded(on: destination, type: ConsentBlocker.self) {
+                        ConsentBlocker(destinationKey: key, store: self.store)
                     }
                 }
             }
+        }
+    }
+
+    private func installBlockerIfNeeded<B: ConsentBlocker>(
+        on destination: DestinationPlugin,
+        type: B.Type,
+        make: () -> B
+    ) {
+        if destination.analytics?.find(pluginType: type) == nil {
+            _ = destination.add(plugin: make())
         }
     }
     
