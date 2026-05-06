@@ -19,10 +19,8 @@ public class ConsentManager: EventPlugin {
     internal let consentChange: (() -> Void)?
     @Atomic internal var started: Bool = false
 
-    // Serializes destination-timeline mutations triggered by settings updates.
-    // Prevents a race against Mediator iteration on the analytics event thread.
     private let updateQueue = DispatchQueue(label: "com.segment.consent.manager.update")
-        
+
     public init(provider: ConsentCategoryProvider, consentChanged: (() -> Void)? = nil) {
         self.provider = provider
         self.consentChange = consentChanged
@@ -44,24 +42,19 @@ public class ConsentManager: EventPlugin {
         store.dispatch(action: ConsentState.UpdateUnmappedDestinationsAction(hasUnmappedDestinations: hasUnmappedDestinations(settings)))
         store.dispatch(action: ConsentState.UpdateEnabledAtSegmentAction(enabledAtSegment: enabledAtSegment(settings)))
 
-        // update() is invoked from the URLSession delegate thread after settings
-        // are fetched. Destination timeline mutation (add(plugin:)) must not race
-        // with event processing on the analytics thread, and must be serialized
-        // against re-entrant settings updates to avoid duplicate blockers from
-        // a check-then-insert TOCTOU.
-        updateQueue.async { [weak self] in
-            guard let self, let analytics = self.analytics else { return }
+        updateQueue.sync {
+            guard let analytics else { return }
 
             if let destination = analytics.find(key: Constants.segmentIOKey) {
-                self.installBlockerIfNeeded(on: destination, type: SegmentConsentBlocker.self) {
-                    SegmentConsentBlocker(store: self.store)
+                installBlockerIfNeeded(on: destination, type: SegmentConsentBlocker.self) {
+                    SegmentConsentBlocker(store: store)
                 }
             }
 
             for key in state.keys {
                 if let destination = analytics.find(key: key) {
-                    self.installBlockerIfNeeded(on: destination, type: ConsentBlocker.self) {
-                        ConsentBlocker(destinationKey: key, store: self.store)
+                    installBlockerIfNeeded(on: destination, type: ConsentBlocker.self) {
+                        ConsentBlocker(destinationKey: key, store: store)
                     }
                 }
             }
