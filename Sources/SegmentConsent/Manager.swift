@@ -13,12 +13,12 @@ public class ConsentManager: EventPlugin {
     public let type: PluginType = .before
     public weak var analytics: Analytics? = nil
     public let store = Store()
-    
+
     internal var provider: ConsentCategoryProvider
     internal var queuedEvents = [RawEvent]()
     internal let consentChange: (() -> Void)?
     @Atomic internal var started: Bool = false
-        
+
     public init(provider: ConsentCategoryProvider, consentChanged: (() -> Void)? = nil) {
         self.provider = provider
         self.consentChange = consentChanged
@@ -39,26 +39,31 @@ public class ConsentManager: EventPlugin {
         store.dispatch(action: ConsentState.UpdateDestinationCategoriesAction(destinationCategories: state))
         store.dispatch(action: ConsentState.UpdateUnmappedDestinationsAction(hasUnmappedDestinations: hasUnmappedDestinations(settings)))
         store.dispatch(action: ConsentState.UpdateEnabledAtSegmentAction(enabledAtSegment: enabledAtSegment(settings)))
-        
-        if let analytics {
-            // Add customer blocker to segment.io
-            if let destination = analytics.find(key: Constants.segmentIOKey) {
-                let existingBlocker = destination.analytics?.find(pluginType: SegmentConsentBlocker.self)
-                if existingBlocker == nil {
-                    _ = destination.add(plugin: SegmentConsentBlocker(store: store))
+
+        guard let analytics else { return }
+
+        if let destination = analytics.find(key: Constants.segmentIOKey) {
+            installBlockerIfNeeded(on: destination, type: SegmentConsentBlocker.self) {
+                SegmentConsentBlocker(store: store)
+            }
+        }
+
+        for key in state.keys {
+            if let destination = analytics.find(key: key) {
+                installBlockerIfNeeded(on: destination, type: ConsentBlocker.self) {
+                    ConsentBlocker(destinationKey: key, store: store)
                 }
             }
-            
-            // Add blocker to other destinations
-            let destinationKeys = state.keys
-            for key in destinationKeys {
-                if let destination = analytics.find(key: key) {
-                    let existingBlocker = destination.analytics?.find(pluginType: ConsentBlocker.self)
-                    if existingBlocker == nil {
-                        _ = destination.add(plugin: ConsentBlocker(destinationKey: key, store: store))
-                    }
-                }
-            }
+        }
+    }
+
+    private func installBlockerIfNeeded<B: ConsentBlocker>(
+        on destination: DestinationPlugin,
+        type: B.Type,
+        make: () -> B
+    ) {
+        if destination.analytics?.find(pluginType: type) == nil {
+            _ = destination.add(plugin: make())
         }
     }
     
