@@ -19,8 +19,6 @@ public class ConsentManager: EventPlugin {
     internal let consentChange: (() -> Void)?
     @Atomic internal var started: Bool = false
 
-    private let updateQueue = DispatchQueue(label: "com.segment.consent.manager.update")
-
     public init(provider: ConsentCategoryProvider, consentChanged: (() -> Void)? = nil) {
         self.provider = provider
         self.consentChange = consentChanged
@@ -42,20 +40,18 @@ public class ConsentManager: EventPlugin {
         store.dispatch(action: ConsentState.UpdateUnmappedDestinationsAction(hasUnmappedDestinations: hasUnmappedDestinations(settings)))
         store.dispatch(action: ConsentState.UpdateEnabledAtSegmentAction(enabledAtSegment: enabledAtSegment(settings)))
 
-        updateQueue.sync {
-            guard let analytics else { return }
+        guard let analytics else { return }
 
-            if let destination = analytics.find(key: Constants.segmentIOKey) {
-                installBlockerIfNeeded(on: destination, type: SegmentConsentBlocker.self) {
-                    SegmentConsentBlocker(store: store)
-                }
+        if let destination = analytics.find(key: Constants.segmentIOKey) {
+            installBlockerIfNeeded(on: destination, type: SegmentConsentBlocker.self) {
+                SegmentConsentBlocker(store: store)
             }
+        }
 
-            for key in state.keys {
-                if let destination = analytics.find(key: key) {
-                    installBlockerIfNeeded(on: destination, type: ConsentBlocker.self) {
-                        ConsentBlocker(destinationKey: key, store: store)
-                    }
+        for key in state.keys {
+            if let destination = analytics.find(key: key) {
+                installBlockerIfNeeded(on: destination, type: ConsentBlocker.self) {
+                    ConsentBlocker(destinationKey: key, store: store)
                 }
             }
         }
