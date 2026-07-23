@@ -23,10 +23,14 @@ jobs:
     runs-on: macos-arm
     steps:
     - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-    - run: xcodebuild -scheme SegmentConsent test -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=latest,name=iPhone 17'
+    # The runner has no simulator runtimes preinstalled — download iOS first.
+    - run: xcodebuild -downloadPlatform iOS
+    - run: xcodebuild -scheme SegmentConsent test -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 17'
 
   build_and_test_tvos:
     runs-on: macos-arm
     steps:
     - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+    # The runner has no simulator runtimes preinstalled — download tvOS first.
+    - run: xcodebuild -downloadPlatform tvOS
     - run: xcodebuild -scheme SegmentConsent test -sdk appletvsimulator -destination 'platform=tvOS Simulator,name=Apple TV'
